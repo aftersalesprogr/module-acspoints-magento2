@@ -1,0 +1,35 @@
+{
+  "name": "aftersalesprogr_acspoints",
+  "description":"Official ACS Shipping Module for ACS Points",
+  "keywords": [
+    "magento 2",
+    "aftersalespro",
+    "acs",
+    "acscourier"
+  ],
+  "require": {
+    "php": ">=7.4",
+    "guzzlehttp/guzzle": "~7.5"
+  },
+  "type": "magento2-module",
+  "version": "1.0.5",
+  "license": [
+    "GPL-3.0-or-later"
+  ],
+  "homepage": "https://www.acscourier.net/",
+  "authors": [
+    {
+      "name": "AfterSalesPro",
+      "email": "info@aftersalespro.gr",
+      "homepage": "https://www.aftersalespro.gr"
+    }
+  ],
+  "autoload": {
+    "files": [
+      "registration.php"
+    ],
+    "psr-4": {
+      "AfterSalesPro\\AcsPoints\\": ""
+    }
+  }
+}

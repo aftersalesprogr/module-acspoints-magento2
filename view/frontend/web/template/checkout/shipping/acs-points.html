@@ -1,0 +1,76 @@
+<!-- ko if: (isEnabled()) -->
+<div class="step-title" data-bind="i18n: 'Acs Points'" data-role="title"></div>
+<div class="control">
+    <div class="locker-container">
+        <button class="pick-locker-button" data-bind="click: handleToggleMap" id="locker-trigger"
+                type="button">
+            SELECT
+        </button>
+        <!-- ko if: (selectedPoint()) -->
+        <input id="acs_pp_point_id" name="acs_pp_point_id" type="hidden"
+               data-bind="attr: {value: selectedPoint() ? selectedPoint().id : ''}">
+        <div class="mg-selected-locker-title">Επιλέξατε παραλαβή από:</div>
+        <div class="mg-selected-locker-container">
+            <a class="mg-selected-locker-link"
+               target="_blank"
+               data-bind="attr: { title: selectedPoint().name, href: `https://maps.google.com/?q=${selectedPoint().lat},${selectedPoint().lon}`}">
+                <img data-bind="attr: { src: selectedPoint().icon }"/>
+                <span class="mg-selected-locker-content"
+                      data-bind="html: selectedPoint().name + '<br>' + selectedPoint().street"
+                ></span>
+            </a>
+        </div>
+        <!-- /ko -->
+    </div>
+    <div class="acs-sp-wrapper" data-bind="css: {open: !mapClosed()}" style="visibility: hidden; opacity: 0;">
+        <div class="acs-sp-container">
+            <div class="acs-sp-header">
+                <img alt="ACS Courier Logo"
+                     data-bind="attr: { src: require.toUrl('AfterSalesProGr_AcsPoints/images/acs-courier-logo.png') }"/>
+                <span>Επιλέξτε το ACS Point που σας εξυπηρετεί</span>
+            </div>
+            <div class="acs-sp-body">
+                <div class="acs-sp-sidebar" data-bind="css: {close: sidebarClosed}">
+                    <div class="acs-sp-search-wrapper">
+                        <input data-bind="attr: {value: getZipCode()}" id="acs-sp-postcode-input" placeholder="Search..."
+                               type="text"/>
+                        <button id="acs-sp-postcode-search-trigger">Search</button>
+                    </div>
+                    <div class="acs-sp-sidebar-points-list-wrapper">
+                        <div class="acs-sp-sidebar-points-list">
+                            <!-- ko foreach: { data: data.points, as: 'point' } -->
+                            <a class="acs-sp-sidebar-points-list-item"
+                                    data-bind="click: $parent.focusPoint, attr: {id: point.id}"
+                            >
+                                <img data-bind="attr: {src: point.icon}"/>
+                                <span class="acs-sp-sidebar-points-list-item-content">
+                                    <span class="acs-sp-sidebar-points-list-item-title"
+                                          data-bind="text: point.name"></span>
+                                    <span class="acs-sp-sidebar-points-list-item-address"
+                                          data-bind="text: point.street"></span>
+                                    <!-- ko if: (point.is_24h) -->
+                                        <span class="acs-sp-allDayBadge">24ΩΡΟ</span>
+                                    <!-- /ko -->
+                                </span>
+                            </a>
+                            <!-- /ko -->
+                        </div>
+                    </div>
+                </div>
+                <div class="acs-sp-sidebar-close-btn acs-sp-btn"
+                     data-bind="click: handleToggleSidebar,css: {close: sidebarClosed}"></div>
+                <div class="acs-sp-close-btn acs-sp-btn" data-bind="click: handleToggleMap"></div>
+                <div afterRender="initMap" class="acs-sp-map" id="acs-sp-map"></div>
+            </div>
+            <div class="acs-sp-footer">
+                <!-- ko foreach: { data: data.meta, as: 'meta' } -->
+                <a data-bind="attr:{title: meta.description}">
+                    <img data-bind="attr: {src: meta.icon, alt: meta.title}"/>
+                    <span data-bind="text: meta.title"></span>
+                </a>
+                <!-- /ko -->
+            </div>
+        </div>
+    </div>
+</div>
+<!--/ko-->

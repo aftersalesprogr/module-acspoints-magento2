@@ -1,0 +1,48 @@
+<?php
+/**
+ * @var $block \AfterSalesProGr\AcsPoints\Block\System\Config\UpdatePointsButton
+ */
+?>
+<?php echo $block->getButtonHtml() ?>
+<script>
+    require([
+        'jquery',
+        'prototype'
+    ], function ($) {
+        $('#update_points').click(function () {
+            new Ajax.Request('<?php echo $block->getAjaxUrl() ?>', {
+                loaderArea: true,
+                asynchronous: true,
+                parameters: {},
+                onSuccess: function (transport) {
+                    var response = JSON.parse(transport.responseText)
+                    $('#messages .message-success span.message-text').text(response.message)
+                    $('#messages .message-success').show()
+                    $('#messages .message-success').delay(8000).fadeOut()
+                },
+                onFailure: function (transport) {
+                    var response = JSON.parse(transport.responseText)
+                    $('#messages .message-error span.message-text').text(response.message)
+                    $('#messages .message-error').show()
+                    $('#messages .message-error').delay(8000).fadeOut()
+                    return false
+                }
+            })
+        })
+    })
+</script>
+
+<div id="messages">
+    <div class="messages">
+        <div class="message message-success success" style="display: none;">
+            <div data-ui-id="messages-message-success">
+                <span class="message-text"></span>
+            </div>
+        </div>
+        <div class="message message-error error" style="display: none;">
+            <div data-ui-id="messages-message-error">
+                <span class="message-text"></span>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,140 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="../../../../Magento/Config/etc/system_file.xsd">
+    <system>
+        <section id="carriers" translate="label" type="text" sortOrder="1" showInDefault="1" showInWebsite="1"
+                 showInStore="1">
+            <group id="AfterSalesProGrAcsPoints" translate="label" type="text" sortOrder="2" showInDefault="1"
+                   showInWebsite="1" showInStore="1">
+                <label>ACS Points Plugin (by aftersalespro.gr)</label>
+                <field id="active"
+                       translate="label"
+                       type="select"
+                       sortOrder="1"
+                       showInDefault="1"
+                       showInWebsite="1"
+                       showInStore="1">
+                    <label>Enabled</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+                <field id="googleApiKey"
+                       translate="label"
+                       type="text"
+                       sortOrder="2"
+                       showInDefault="1"
+                       showInWebsite="1"
+                       showInStore="1">
+                    <label>Google Api Key</label>
+                </field>
+                <field id="basePrice"
+                       translate="label"
+                       type="text"
+                       sortOrder="3"
+                       showInDefault="1"
+                       showInWebsite="1"
+                       showInStore="0">
+                    <label>Shipping Cost per order (€)</label>
+                    <validate>validate-number validate-zero-or-greater</validate>
+                </field>
+                <field id="weightUpperLimit"
+                       translate="label"
+                       type="text"
+                       sortOrder="4"
+                       showInDefault="1"
+                       showInWebsite="1"
+                       showInStore="0">
+                    <label>Weight Limit (kg)</label>
+                    <validate>validate-number validate-zero-or-greater</validate>
+                </field>
+                <field id="freeShippingUpperLimit"
+                       translate="label"
+                       type="text"
+                       sortOrder="5"
+                       showInDefault="1"
+                       showInWebsite="1"
+                       showInStore="1">
+                    <label>Free Delivery (€)</label>
+                    <validate>validate-number validate-zero-or-greater</validate>
+                </field>
+                <field id="acsCompanyID"
+                       translate="label"
+                       type="text"
+                       sortOrder="10"
+                       showInDefault="1"
+                       showInWebsite="1"
+                       showInStore="0">
+                    <label>Company ID</label>
+                    <backend_model>AfterSalesProGr\AcsPoints\Model\Config\UpdatePoints</backend_model>
+                </field>
+                <field id="acsCompanyPassword"
+                       translate="label"
+                       type="text"
+                       sortOrder="12"
+                       showInDefault="1"
+                       showInWebsite="1"
+                       showInStore="0">
+                    <label>Company Password</label>
+                </field>
+                <field id="acsUserID"
+                       translate="label"
+                       type="text"
+                       sortOrder="13"
+                       showInDefault="1"
+                       showInWebsite="1"
+                       showInStore="0">
+                    <label>User ID</label>
+                </field>
+                <field id="acsUserPassword"
+                       translate="label"
+                       type="text"
+                       sortOrder="14"
+                       showInDefault="1"
+                       showInWebsite="1"
+                       showInStore="0">
+                    <label>User Password</label>
+                </field>
+                <field id="acsApiKey"
+                       translate="label"
+                       type="text"
+                       sortOrder="15"
+                       showInDefault="1"
+                       showInWebsite="1"
+                       showInStore="0">
+                    <label>Api Key</label>
+                </field>
+                <field id="updatePoints" translate="label" type="button" sortOrder="70" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Update Points</label>
+                    <frontend_model>AfterSalesProGr\AcsPoints\Block\System\Config\UpdatePointsButton</frontend_model>
+                    <depends>
+                        <field id="status">1</field>
+                    </depends>
+                </field>
+                <field id="specificerrmsg" translate="label" type="textarea" sortOrder="80" showInDefault="1"
+                       showInWebsite="1" showInStore="1">
+                    <label>Displayed Error Message</label>
+                </field>
+                <field id="sallowspecific" translate="label" type="select" sortOrder="90" showInDefault="1"
+                       showInWebsite="1" showInStore="0">
+                    <label>Ship to Applicable Countries</label>
+                    <frontend_class>shipping-applicable-country</frontend_class>
+                    <source_model>Magento\Shipping\Model\Config\Source\Allspecificcountries</source_model>
+                </field>
+                <field id="specificcountry" translate="label" type="multiselect" sortOrder="91" showInDefault="1"
+                       showInWebsite="1" showInStore="0">
+                    <label>Ship to Specific Countries</label>
+                    <source_model>Magento\Directory\Model\Config\Source\Country</source_model>
+                    <can_be_empty>1</can_be_empty>
+                </field>
+                <field id="showmethod" translate="label" type="select" sortOrder="92" showInDefault="1"
+                       showInWebsite="1" showInStore="0">
+                    <label>Show Method if Not Applicable</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+                <field id="sort_order" translate="label" type="text" sortOrder="100" showInDefault="1" showInWebsite="1"
+                       showInStore="0">
+                    <label>Sort Order</label>
+                </field>
+            </group>
+        </section>
+    </system>
+</config>

@@ -1,0 +1,28 @@
+<?php
+/**
+ * @var $block AfterSalesProGr\AcsPoints\Block\Adminhtml\AcsPoint
+ */
+?>
+<?php if ($block->hasPoint()) : ?>
+    <tr>
+        <th><?php echo __('ACS Point') ?></th>
+        <td><?php echo $block->getAcsPointId(); ?></td>
+    </tr>
+    <tr>
+        <th>
+            <img src="<?php echo $block->getPointIcon(); ?>"/>
+            <span><?php echo __('ACS Point') ?></span>
+        </th>
+        <td>
+            <a title="<?php echo $block->getPointName(); ?>"
+               href="<?php echo $block->getPointMapUrl(); ?>"
+               target="_blank"
+            >
+                <span class="mg-selected-locker-content">
+                    <?php echo $block->getPointName(); ?><br>
+                    <?php echo $block->getPointStreet(); ?>
+                </span>
+            </a>
+        </td>
+    </tr>
+<?php endif; ?>

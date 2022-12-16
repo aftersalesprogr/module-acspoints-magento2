@@ -1,0 +1,35 @@
+<?xml version="1.0"?>
+<csp_whitelist xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+               xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Csp/etc/csp_whitelist.xsd">
+    <policies>
+        <policy id="script-src">
+            <values>
+                <value id="maps.googleapis" type="host">maps.googleapis.com</value>
+            </values>
+        </policy>
+        <policy id="connect-src">
+            <values>
+                <value id="maps.googleapis" type="host">maps.googleapis.com</value>
+            </values>
+        </policy>
+        <policy id="img-src">
+            <values>
+                <value id="maps.gstatic" type="host">maps.gstatic.com</value>
+                <value id="maps.googleapis" type="host">*.googleapis.com</value>
+                <value id="maps.google" type="host">*.google.com</value>
+                <value id="acscourrier" type="host">*.acscourier.net</value>
+            </values>
+        </policy>
+        <policy id="style-src">
+            <values>
+                <value id="fonts.google" type="host">fonts.googleapis.com</value>
+            </values>
+        </policy>
+        <policy id="font-src">
+            <values>
+                <value id="fonts.gstatic" type="host">fonts.gstatic.com</value>
+                <value id="fonts.google" type="host">fonts.googleapis.com</value>
+            </values>
+        </policy>
+    </policies>
+</csp_whitelist>

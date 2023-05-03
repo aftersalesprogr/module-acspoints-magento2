@@ -41,7 +41,7 @@ class AcsPoint extends \Magento\Sales\Block\Adminhtml\Order\View
 
     public function getPointName()
     {
-        return $this->getPointData('name');
+        return $this->getPointData('name').' ('.$this->getPointData('Acs_Station_Destination').$this->getPointData('Acs_Station_Branch_Destination').')';
     }
 
     public function getPointStreet()

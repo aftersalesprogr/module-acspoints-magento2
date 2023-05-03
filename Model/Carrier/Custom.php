@@ -43,10 +43,10 @@ class Custom extends AbstractCarrier implements CarrierInterface
             return false;
         }
 
-        //        $shipment_weight = $request->getPackageWeight();
-        //        if ($shipment_weight > $this->getConfigData('weightUpperLimit')) {
-        //            return false;
-        //        }
+        $shipment_weight = $request->getPackageWeight();
+        if ($shipment_weight > $this->getConfigData('weightUpperLimit')) {
+            return false;
+        }
 
         $shipment_price = $request->getPackageValue();
 
@@ -57,6 +57,9 @@ class Custom extends AbstractCarrier implements CarrierInterface
         $methodPrice = 0;
         if (!$isFreeShipping) {
             $methodPrice = $this->getConfigData('basePrice');
+            if ($shipment_weight > $this->getConfigData('baseWeight')) {
+                $methodPrice += $this->getConfigData('costPerKg') * ($shipment_weight - $this->getConfigData('baseWeight'));
+            }
         }
 
         $result->append($this->_appendMethod([

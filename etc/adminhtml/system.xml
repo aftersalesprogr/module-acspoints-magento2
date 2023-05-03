@@ -33,7 +33,27 @@
                        showInDefault="1"
                        showInWebsite="1"
                        showInStore="0">
-                    <label>Shipping Cost per order (€)</label>
+                    <label>Base Shipping Cost per order (€)</label>
+                    <validate>validate-number validate-zero-or-greater</validate>
+                </field>
+                <field id="baseWeight"
+                       translate="label"
+                       type="text"
+                       sortOrder="3"
+                       showInDefault="1"
+                       showInWebsite="1"
+                       showInStore="0">
+                    <label>Base Shipping Cost Weight Limit (kg)</label>
+                    <validate>validate-number validate-zero-or-greater</validate>
+                </field>
+                <field id="costPerKg"
+                       translate="label"
+                       type="text"
+                       sortOrder="3"
+                       showInDefault="1"
+                       showInWebsite="1"
+                       showInStore="0">
+                    <label>Cost per extra kg (€)</label>
                     <validate>validate-number validate-zero-or-greater</validate>
                 </field>
                 <field id="weightUpperLimit"

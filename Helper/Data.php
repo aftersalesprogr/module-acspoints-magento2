@@ -104,16 +104,16 @@ class Data extends AbstractHelper
 
             $body = json_decode((string) $response->getBody()->getContents(), true);
 
-            $data = [
-                'status_code' => $response->getStatusCode(),
-                'meta'        => $body['ACSOutputResponce']['ACSTableOutput']['Table_Data'] ?? [],
-                'points'      => $body['ACSOutputResponce']['ACSTableOutput']['Table_Data1'] ?? [],
-            ];
+            $points = $body['ACSOutputResponce']['ACSTableOutput']['Table_Data1'] ?? [];
+
+            $points = array_values(array_filter($points, function ($item) {
+                return $item['type'] !== 'branch' || $item['Acs_Station_Branch_Destination'] == '1';
+            }));
 
             return [
                 'timestamp' => date('Y-m-d H:i'),
                 'meta'      => $body['ACSOutputResponce']['ACSTableOutput']['Table_Data'] ?? [],
-                'points'    => $body['ACSOutputResponce']['ACSTableOutput']['Table_Data1'] ?? [],
+                'points'    => $points,
             ];
         } catch (\Exception $e) {
             $this->logger->error("ACS Points Update: ".$e->getMessage());

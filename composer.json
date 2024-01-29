@@ -12,7 +12,7 @@
     "guzzlehttp/guzzle": "~7.5"
   },
   "type": "magento2-module",
-  "version": "1.0.7",
+  "version": "1.0.8",
   "license": [
     "GPL-3.0-or-later"
   ],

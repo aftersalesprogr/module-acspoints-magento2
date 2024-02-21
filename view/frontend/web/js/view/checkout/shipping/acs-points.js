@@ -19,6 +19,7 @@ define([
             this.filesUrl = this.baseUrl;
             this.data = ko.observable({});
             this.selectedPoint = ko.observable(undefined);
+            this.pointDistance = ko.observable('');
             this.isValid = ko.observable(true);
             this.loaded = ko.observable(false);
             this.mapClosed = ko.observable(true);
@@ -26,6 +27,7 @@ define([
             this.map = undefined;
             this.infoWindow = new google.maps.InfoWindow();
             this.markers = [];
+            this.locationCache = {};
 
             const that = this;
             this.fetchLocations();
@@ -52,23 +54,23 @@ define([
                 }
             });
 
+            $(document).on('blur', '[name="city"],[name="street[0]"],[name="street[1]"],[name="street[2]"]', function (e) {
+                that.searchDistance()
+            });
+
             $(document).on('click', 'button[data-point]', function (e) {
                 e.preventDefault();
                 that.selectPoint($(e.target).data('point'));
             });
 
             $(document).keyup(function (e) {
-                if (e.keyCode === 27) {
+                if (!that.mapClosed() && e.keyCode === 27) {
                     that.handleToggleMap();
                 }
-                if (e.keyCode === 13) {
+                if (!that.mapClosed() && e.keyCode === 13) {
                     that.postcodeSearch();
                 }
             });
-
-            // $('#acs-sp-postcode-search-trigger').click(function () {
-            //     that.postcodeSearch();
-            // });
         },
         getZipCode: function () {
             if (quote && quote.shippingAddress()) {
@@ -76,10 +78,17 @@ define([
             }
             return undefined;
         },
+        getAddress: function () {
+            if (quote && quote.shippingAddress()) {
+                return quote.shippingAddress().street.join(' ') + ',' + quote.shippingAddress().city + ', ' + quote.shippingAddress().postcode;
+            }
+            return undefined;
+        },
         isEnabled: function () {
             if (!this.data || !this.data.points || !this.data.points.length) {
                 return false;
             }
+            this.searchDistance()
             if (quote && quote.shippingMethod()) {
                 if (quote.shippingMethod().carrier_code === 'AfterSalesProGrAcsPoints') {
                     return true;
@@ -87,19 +96,62 @@ define([
             }
             return false;
         },
+        searchDistance: function () {
+            if (quote && quote.shippingAddress() && this.getAddress()) {
+                const that = this;
+                if (that.locationCache[that.getAddress()]?.lat && that.locationCache[that.getAddress()]?.lng){
+                    that.findNearestPoint(that.locationCache[that.getAddress()].lat, that.locationCache[that.getAddress()].lng, true);
+                    return;
+                }
+                new google.maps.Geocoder().geocode({'address': that.getAddress() + ', GR'}, function (results, status) {
+                    if (status === 'OK') {
+                        that.locationCache[that.getAddress()] = {
+                            lat: results[0].geometry.location.lat(),
+                            lng: results[0].geometry.location.lng()
+                        }
+                        that.findNearestPoint(results[0].geometry.location.lat(), results[0].geometry.location.lng(), true);
+                    }
+                });
+            }
+        },
         postcodeSearch: function () {
             const that = this;
-            new google.maps.Geocoder().geocode({'address': this.getZipCode() + ' GR'}, function (results, status) {
+            new google.maps.Geocoder().geocode({'address': that.getAddress() + ', GR'}, function (results, status) {
                 if (status === 'OK') {
+
+                    if (that.markers['custom_marker'] !== undefined) {
+                        that.markers['custom_marker'].setMap(null);
+                    }
+
+                    let is_address = results[0].types[0] == 'premise' || results[0].types[0] == 'street_address';
+                    if (is_address) {
+                        that.markers['custom_marker'] = new google.maps.Marker({
+                            position: new google.maps.LatLng(results[0].geometry.location.lat(), results[0].geometry.location.lng()),
+                            map: that.map,
+                            id: 'custom-location'
+                        });
+                    }
+
+                    that.findNearestPoint(results[0].geometry.location.lat(), results[0].geometry.location.lng(), is_address);
                     that.map.setCenter(results[0].geometry.location);
-                    that.map.setZoom(14);
-                } else {
-                    alert('Η αναζήτησή σας δεν βρήκε κάποια αποτελέσματα. Παρακαλώ εισάγετε τον Τ.Κ της περιοχής σας.');
+                    if (is_address) {
+                        that.map.setZoom(16);
+                    } else {
+                        that.map.setZoom(14);
+                    }
                 }
             });
         },
-        getLocationFromPostcode: function (postcode) {
-            return new google.maps.Geocoder().geocode({'address': postcode + ' GR'}, function (results, status) {
+        getLocationFromPostcode: function (address) {
+            return new google.maps.Geocoder().geocode({'address': address + ', GR'}, function (results, status) {
+                if (status === 'OK') {
+                    return results[0].geometry.location;
+                }
+            });
+        },
+        getLocationFromAddress: function () {
+            const address = this.getAddress()
+            return new google.maps.Geocoder().geocode({'address': address + ', GR'}, function (results, status) {
                 if (status === 'OK') {
                     return results[0].geometry.location;
                 }
@@ -109,15 +161,11 @@ define([
             this.addMap(element);
             this.addMarkers();
             this.addPointDetails();
-            // const point_id = $.initNamespaceStorage('acs_points').localStorage.get('acs_points_point_id');
-            // if (point_id) {
-            //     this.selectPoint(point_id);
-            // }
         },
         addMap: function (element) {
             let center = new google.maps.LatLng(38.0045296, 23.7144523);
-            if (this.getZipCode()) {
-                center = this.getLocationFromPostcode(this.getZipCode());
+            if (this.getAddress()) {
+                center = this.getLocationFromPostcode(this.getAddress());
             }
             this.map = new google.maps.Map(element, {
                 maxZoom: 16,
@@ -182,16 +230,19 @@ define([
             });
             try {
                 new MarkerClusterer(this.map, this.markers, {
-                    imagePath: 'https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/m'
+                    imagePath: 'https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/m',
+                    maxZoom: 14
                 });
             } catch (e) {
-            } // MarkerClusterer not loaded correctly
+            }
         },
         addPointDetails: function () {
             const that = this;
             this.data.points.forEach(function (point, index) {
-                google.maps.event.addListener(that.markers[index], 'click', function () {
-                    that.openPoint(that.markers[index]);
+                const marker = that.markers[index];
+                marker.set("id", that.markers[index].id);
+                google.maps.event.addListener(marker, 'click', function () {
+                    that.openPoint(marker);
                 });
             });
         },
@@ -242,12 +293,9 @@ define([
             const that = this;
             $.getJSON(this.filesUrl + '/media/acs/acs-points.json', function (data) {
                 that.data = data;
-                console.log('data', data);
             }).fail(function () {
-                console.log('An error has occurred.');
             }).always(function () {
                 that.loaded(true);
-                console.log('data new', that.data);
             });
         },
         handleToggleSidebar: function () {
@@ -258,6 +306,54 @@ define([
                 this.postcodeSearch();
             }
             this.mapClosed(!this.mapClosed());
+        },
+        calculateDistanceBetweenTwoCoordinatesInKm: function(lat1, lon1, lat2, lon2) {
+            if ((lat1 === lat2) && (lon1 === lon2)) {
+                return 0;
+            }
+            else {
+                let radlat1 = Math.PI * lat1/180;
+                let radlat2 = Math.PI * lat2/180;
+                let theta = lon1-lon2;
+                let radtheta = Math.PI * theta/180;
+                let dist = Math.sin(radlat1) * Math.sin(radlat2) + Math.cos(radlat1) * Math.cos(radlat2) * Math.cos(radtheta);
+                if (dist > 1) {
+                    dist = 1;
+                }
+                dist = Math.acos(dist);
+                dist = dist * 180/Math.PI;
+                dist = dist * 60 * 1.1515;
+                return dist * 1.609344;
+            }
+        },
+        findNearestPoint: function (lat, lng, is_address = true) {
+            let min_distance = 1000000;
+            let min_lat = null;
+            let min_lng = null;
+            let distance = null;
+
+            for (let lcnt = 0; lcnt < this.data.points.length; lcnt++) {
+                distance = this.calculateDistanceBetweenTwoCoordinatesInKm(lat, lng, this.data.points[lcnt].lat, this.data.points[lcnt].lon);
+                if (min_distance > distance ) {
+                    min_distance = distance;
+                    min_lat = this.data.points[lcnt].lat;
+                    min_lng = this.data.points[lcnt].lon;
+                }
+            }
+
+            let distanceText = min_distance * 1000;
+            let text = "";
+            if (distanceText <= 3000) {
+                distanceText = distanceText.toFixed(0);
+                text += '<img src="' + require.toUrl('AfterSalesProGr_AcsPoints/images/point.svg') + '" alt="point-icon" />'
+                if (is_address) {
+                    text += "Πλησιέστερο point: <strong>" +(distanceText)+ "</strong>m"
+                } else {
+                    text += "Υπάρχει ACS Point στην περιοχή σου";
+                }
+            }
+            this.pointDistance(text)
+            $('#label_carrier_courier_AfterSalesProGrAcsPoints').html(text);
         }
     });
 });

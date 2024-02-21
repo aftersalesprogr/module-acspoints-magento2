@@ -2,6 +2,9 @@
 <div class="step-title" data-bind="i18n: 'Acs Points'" data-role="title"></div>
 <div class="control">
     <div class="locker-container">
+        <!-- ko if: (pointDistance().length) -->
+            <span class="point-distance" data-bind="html: pointDistance()"></span>
+        <!-- /ko -->
         <button class="pick-locker-button" data-bind="click: handleToggleMap" id="locker-trigger"
                 type="button">
             SELECT

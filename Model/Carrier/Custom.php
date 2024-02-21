@@ -92,4 +92,14 @@ class Custom extends AbstractCarrier implements CarrierInterface
     {
         return true;
     }
+
+    public function isCityRequired()
+    {
+        return true;
+    }
+
+    public function isStateProvinceRequired()
+    {
+        return true;
+    }
 }

@@ -345,7 +345,6 @@ define([
             let text = "";
             if (distanceText <= 3000) {
                 distanceText = distanceText.toFixed(0);
-                text += '<img src="' + require.toUrl('AfterSalesProGr_AcsPoints/images/point.svg') + '" alt="point-icon" />'
                 if (is_address) {
                     text += "Πλησιέστερο point: <strong>" +(distanceText)+ "</strong>m"
                 } else {

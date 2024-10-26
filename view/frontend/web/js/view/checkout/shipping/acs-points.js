@@ -255,7 +255,7 @@ define([
             $('.acs-sp-sidebar-points-list').children().removeClass('active');
             document.getElementById(point.id).classList.add('active');
 
-            const isSmartLocker = point.type === 'smartlocker';
+            const isSmartLocker = point.type === 'smartlocker' && point.Acs_Smartpoint_COD_Supported == 1;
             const notes = isSmartLocker ? `<div class="acs-sp-map-point-infobox-notes">Δυνατότητα πληρωμής με Visa/Mastercard.</div>` : '';
             const allDay = `<span class="acs-sp-allDayBadge">24ΩΡΟ</span>`;
             this.infoWindow.setContent(`

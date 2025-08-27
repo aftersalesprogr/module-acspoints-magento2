@@ -255,8 +255,8 @@ define([
             $('.acs-sp-sidebar-points-list').children().removeClass('active');
             document.getElementById(point.id).classList.add('active');
 
-            const isSmartLocker = point.type === 'smartlocker' && point.Acs_Smartpoint_COD_Supported == 1;
-            const notes = isSmartLocker ? `<div class="acs-sp-map-point-infobox-notes">Δυνατότητα πληρωμής με Visa/Mastercard.</div>` : '';
+            const isSmartLocker = point.type === 'smartlocker';
+            const notes = point.Acs_Smartpoint_COD_Supported ? `<div class="acs-sp-map-point-infobox-notes">Δυνατότητα πληρωμής με Visa/Mastercard.</div>` : '';
             const allDay = `<span class="acs-sp-allDayBadge">24ΩΡΟ</span>`;
             this.infoWindow.setContent(`
                 <div class="acs-sp-map-point-infobox">
@@ -274,6 +274,7 @@ define([
         },
         selectPoint: function (id) {
             const point = this.data.points.find(point => point.id === id);
+            point.slug = point.Acs_Station_Destination + point.Acs_Station_Branch_Destination;
             this.selectedPoint(point);
             $.initNamespaceStorage('acs_points').localStorage.set('acs_points_point_id', point ? point.id : undefined);
             this.validate();

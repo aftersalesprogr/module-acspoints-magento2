@@ -11,10 +11,10 @@ define([
             console.log('shipping-save-processor-mixin: save shipping', payload)
             if (quote && quote.shippingMethod()) {
                 if (quote.shippingMethod().carrier_code === 'AfterSalesProGrAcsPoints') {
-                    console.log('shipping-save-processor-mixin: save id', $('[name="acs_pp_point_id"]').val())
                     _.extend(payload.addressInformation.extension_attributes,
                         {
-                            'acs_pp_point_id': $('[name="acs_pp_point_id"]').val()
+                            'acs_pp_point_id': $('[name="acs_pp_point_id"]').val(),
+                            'acs_pp_point_slug': $('[name="acs_pp_point_slug"]').val()
                         }
                     );
                 }

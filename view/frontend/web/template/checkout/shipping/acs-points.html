@@ -1,5 +1,4 @@
 <!-- ko if: (isEnabled()) -->
-<div class="step-title" data-bind="i18n: 'Acs Points'" data-role="title"></div>
 <div class="control">
     <div class="locker-container">
         <!-- ko if: (pointDistance().length) -->
@@ -7,11 +6,14 @@
         <!-- /ko -->
         <button class="pick-locker-button" data-bind="click: handleToggleMap" id="locker-trigger"
                 type="button">
-            SELECT
+            Select ACS Point
         </button>
         <!-- ko if: (selectedPoint()) -->
         <input id="acs_pp_point_id" name="acs_pp_point_id" type="hidden"
                data-bind="attr: {value: selectedPoint() ? selectedPoint().id : ''}">
+        <input id="acs_pp_point_slug" name="acs_pp_point_slug" type="hidden"
+               data-bind="attr: {value: selectedPoint() ? selectedPoint().slug : ''}">
+
         <div class="mg-selected-locker-title">Επιλέξατε παραλαβή από:</div>
         <div class="mg-selected-locker-container">
             <a class="mg-selected-locker-link"
@@ -21,6 +23,16 @@
                 <span class="mg-selected-locker-content"
                       data-bind="html: selectedPoint().name + '<br>' + selectedPoint().street"
                 ></span>
+                 <!-- ko if: (selectedPoint().Acs_Smartpoint_COD_Supported) -->
+                <span class="mg-selected-locker-payment-status-yes">
+                    Με δυνατότητα αντικ/λής.
+                </span>
+                <!-- /ko -->
+                <!-- ko if: (!selectedPoint().Acs_Smartpoint_COD_Supported) -->
+                <span class="mg-selected-locker-payment-status-no">
+                    Χωρίς δυνατότητα αντικ/λής
+                </span>
+                <!-- /ko -->
             </a>
         </div>
         <!-- /ko -->

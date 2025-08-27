@@ -2,8 +2,10 @@
 <schema xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Setup/Declaration/Schema/etc/schema.xsd">
     <table name="quote" resource="default" engine="innodb">
         <column xsi:type="text" name="acs_pp_point_id" nullable="true" comment="ACS Point ID"/>
+        <column xsi:type="text" name="acs_pp_point_slug" nullable="true" comment="ACS Point Slug"/>
     </table>
     <table name="sales_order" resource="default" engine="innodb">
         <column xsi:type="text" name="acs_pp_point_id" nullable="true" comment="ACS Point Id"/>
+        <column xsi:type="text" name="acs_pp_point_slug" nullable="true" comment="ACS Point Slug"/>
     </table>
 </schema>

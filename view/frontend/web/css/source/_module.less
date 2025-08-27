@@ -391,14 +391,19 @@
 
 .pick-locker-button {
     background: #000;
-    font-weight: 600;
     color: #ffff;
-    border-radius: 5px;
     cursor: pointer;
-    padding: 5px;
-    font-size: 15px;
-    margin-top: 10px;
-    margin-bottom: 10px;
+    padding: 5px 10px;
+    font-size: 16px;
+    border-radius: 10px !important;
+    margin: 10px auto;
+    display: block;
+    border: 1px solid #000;
+}
+
+.pick-locker-button:hover {
+    background: #fff;
+    color: #000 !important;
 }
 
 .mg-selected-locker-title {
@@ -409,6 +414,9 @@
     display: flex;
     align-items: center;
     padding-top: 10px;
+    background: #efefef;
+    border-radius: 5px;
+    padding: 10px;
 }
 
 .mg-selected-locker-link {
@@ -417,13 +425,17 @@
 }
 
 .mg-selected-locker-link img {
-    width: 30px;
-    margin-right: 10px;
+  width: 20%;
+  max-width: 48px;
+  margin-right: 2%;
+  float: left;
 }
 
 .mg-selected-locker-container .mg-selected-locker-content {
+    width: 76%;
     line-height: 16px;
     font-size: 14px;
+    display: inline-block;
 }
 
 .acs-points-new {
@@ -432,6 +444,30 @@
     border-radius: 10px;
     padding: 0px 5px 1px;
     font-size: 12px;
+    margin-right: 5px;
+}
+
+
+.mg-selected-locker-payment-status-yes {
+    background: #269200;
+    color: #FFF;
+    border-radius: 10px;
+    padding: 0px 8px 1px;
+    font-size: 12px;
+    clear: both;
+    display: inline-block;
+    margin-right: 5px;
+}
+
+
+.mg-selected-locker-payment-status-no {
+    background: #E3001C;
+    color: #FFF;
+    border-radius: 10px;
+    padding: 0px 8px 1px;
+    font-size: 12px;
+    clear: both;
+    display: inline-block;
     margin-right: 5px;
 }
 

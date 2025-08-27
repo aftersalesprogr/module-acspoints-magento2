@@ -25,6 +25,7 @@ class SaveAcsPointFieldObserver implements \Magento\Framework\Event\ObserverInte
         /** @var \Magento\Quote\Model\Quote $quote */
         $quote = $quoteRepository->get($order->getQuoteId());
         $order->setAcsPpPointId($quote->getAcsPpPointId());
+        $order->setAcsPpPointSlug($quote->getAcsPpPointSlug());
         return $this;
     }
 }

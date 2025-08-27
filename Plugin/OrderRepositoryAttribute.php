@@ -27,6 +27,7 @@ class OrderRepositoryAttribute
         $extensionAttributes = $order->getExtensionAttributes();
         $extensionAttributes = $extensionAttributes ? $extensionAttributes : $this->extensionFactory->create();
         $extensionAttributes->setData('acs_pp_point_id', $order->getData('acs_pp_point_id'));
+        $extensionAttributes->setData('acs_pp_point__slug', $order->getData('acs_pp_point__slug'));
         $order->setExtensionAttributes($extensionAttributes);
         return $order;
     }
@@ -36,13 +37,13 @@ class OrderRepositoryAttribute
         $orders = $searchResult->getItems();
 
         foreach ($orders as &$order) {
-            $customAttribute = $order->getData('acs_pp_point_id');
+            $customAttributeId = $order->getData('acs_pp_point_id');
+            $customAttributeSlug = $order->getData('acs_pp_point_slug');
 
-            if (isset($customAttribute)) {
-                $extensionAttributes = $this->extensionFactory->create();
-                $extensionAttributes->setData('acs_pp_point_id', $customAttribute);
-                $order->setExtensionAttributes($extensionAttributes);
-            }
+            $extensionAttributes = $this->extensionFactory->create();
+            $extensionAttributes->setData('acs_pp_point_id', $customAttributeId);
+            $extensionAttributes->setData('acs_pp_point_slug', $customAttributeSlug);
+            $order->setExtensionAttributes($extensionAttributes);
         }
 
         return $searchResult;

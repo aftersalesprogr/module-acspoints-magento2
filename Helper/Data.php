@@ -106,8 +106,31 @@ class Data extends AbstractHelper
 
             $points = $body['ACSOutputResponce']['ACSTableOutput']['Table_Data1'] ?? [];
 
-            $points = array_values(array_filter($points, function ($item) {
-                return $item['type'] !== 'branch' || $item['Acs_Station_Branch_Destination'] == '1';
+            $countries = explode(',', $this->getConfigData('specificcountry') ?? '');
+            $points = array_values(array_filter($points, function ($item) use ($countries) {
+
+                if ($item['type'] == 'branch' && $item['Acs_Station_Branch_Destination'] != '1') {
+                    return false;
+                }
+
+
+                if (
+                    $this->getConfigData('sallowspecific') == '1'
+                    && !in_array('CY', $countries)
+                    && $item['Country_Code'] == 'CY'
+                ) {
+                    return false;
+                }
+
+                if (
+                    $this->getConfigData('sallowspecific') == '1'
+                    && !in_array('GR', $countries)
+                    && $item['Country_Code'] == 'GR'
+                ) {
+                    return false;
+                }
+
+                return true;
             }));
 
             return [

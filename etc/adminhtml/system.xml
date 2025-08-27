@@ -17,49 +17,38 @@
                     <label>Enabled</label>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                 </field>
+                <field id="senderCountry"
+                       translate="label"
+                       type="select"
+                       sortOrder="2"
+                       showInDefault="1"
+                       showInWebsite="1"
+                       showInStore="1">
+                    <label>Store/Sender Country</label>
+                    <source_model>AfterSalesProGr\AcsPoints\Model\Config\Source\SenderCountry</source_model>
+                </field>
+                <field id="senderZipcode"
+                       translate="label"
+                       type="text"
+                       sortOrder="3"
+                       showInDefault="1"
+                       showInWebsite="1"
+                       showInStore="1">
+                    <label>Store/Sender ZIP Code</label>
+                </field>
                 <field id="googleApiKey"
                        translate="label"
                        type="text"
-                       sortOrder="2"
+                       sortOrder="4"
                        showInDefault="1"
                        showInWebsite="1"
                        showInStore="1">
                     <label>Google Api Key</label>
                 </field>
-                <field id="basePrice"
-                       translate="label"
-                       type="text"
-                       sortOrder="3"
-                       showInDefault="1"
-                       showInWebsite="1"
-                       showInStore="0">
-                    <label>Base Shipping Cost per order (€)</label>
-                    <validate>validate-number validate-zero-or-greater</validate>
-                </field>
-                <field id="baseWeight"
-                       translate="label"
-                       type="text"
-                       sortOrder="3"
-                       showInDefault="1"
-                       showInWebsite="1"
-                       showInStore="0">
-                    <label>Base Shipping Cost Weight Limit (kg)</label>
-                    <validate>validate-number validate-zero-or-greater</validate>
-                </field>
-                <field id="costPerKg"
-                       translate="label"
-                       type="text"
-                       sortOrder="3"
-                       showInDefault="1"
-                       showInWebsite="1"
-                       showInStore="0">
-                    <label>Cost per extra kg (€)</label>
-                    <validate>validate-number validate-zero-or-greater</validate>
-                </field>
                 <field id="weightUpperLimit"
                        translate="label"
                        type="text"
-                       sortOrder="4"
+                       sortOrder="5"
                        showInDefault="1"
                        showInWebsite="1"
                        showInStore="0">
@@ -69,13 +58,14 @@
                 <field id="freeShippingUpperLimit"
                        translate="label"
                        type="text"
-                       sortOrder="5"
+                       sortOrder="6"
                        showInDefault="1"
                        showInWebsite="1"
                        showInStore="1">
                     <label>Free Delivery (€)</label>
                     <validate>validate-number validate-zero-or-greater</validate>
                 </field>
+
                 <field id="acsCompanyID"
                        translate="label"
                        type="text"
@@ -121,6 +111,207 @@
                        showInWebsite="1"
                        showInStore="0">
                     <label>Api Key</label>
+                </field>
+                <field id="acsClientId"
+                       translate="label"
+                       type="text"
+                       sortOrder="16"
+                       showInDefault="1"
+                       showInWebsite="1"
+                       showInStore="0">
+                    <label>Client ID</label>
+                </field>
+
+
+                <field id="basePriceCity"
+                       translate="label"
+                       type="text"
+                       sortOrder="20"
+                       showInDefault="1"
+                       showInWebsite="1"
+                       showInStore="0">
+                    <label>ΕΝΤΟΣ ΠΟΛΗΣ Base Shipping Cost per order (€)</label>
+                    <validate>validate-number validate-zero-or-greater</validate>
+                </field>
+                <field id="baseWeightCity"
+                       translate="label"
+                       type="text"
+                       sortOrder="21"
+                       showInDefault="1"
+                       showInWebsite="1"
+                       showInStore="0">
+                    <label>ΕΝΤΟΣ ΠΟΛΗΣ Base Shipping Cost Weight Limit (kg)</label>
+                    <validate>validate-number validate-zero-or-greater</validate>
+                </field>
+                <field id="costPerKgCity"
+                       translate="label"
+                       type="text"
+                       sortOrder="22"
+                       showInDefault="1"
+                       showInWebsite="1"
+                       showInStore="0">
+                    <label>ΕΝΤΟΣ ΠΟΛΗΣ Cost per extra kg (€)</label>
+                    <validate>validate-number validate-zero-or-greater</validate>
+                </field>
+
+
+                <field id="basePriceIsland"
+                       translate="label"
+                       type="text"
+                       sortOrder="23"
+                       showInDefault="1"
+                       showInWebsite="1"
+                       showInStore="0">
+                    <label>ΝΗΣΙΩΤΙΚΟΣ Base Shipping Cost per order (€)</label>
+                    <validate>validate-number validate-zero-or-greater</validate>
+                </field>
+                <field id="baseWeightIsland"
+                       translate="label"
+                       type="text"
+                       sortOrder="24"
+                       showInDefault="1"
+                       showInWebsite="1"
+                       showInStore="0">
+                    <label>ΝΗΣΙΩΤΙΚΟΣ Base Shipping Cost Weight Limit (kg)</label>
+                    <validate>validate-number validate-zero-or-greater</validate>
+                </field>
+                <field id="costPerKgIsland"
+                       translate="label"
+                       type="text"
+                       sortOrder="25"
+                       showInDefault="1"
+                       showInWebsite="1"
+                       showInStore="0">
+                    <label>ΝΗΣΙΩΤΙΚΟΣ Cost per extra kg (€)</label>
+                    <validate>validate-number validate-zero-or-greater</validate>
+                </field>
+
+
+                <field id="basePriceRegion"
+                       translate="label"
+                       type="text"
+                       sortOrder="26"
+                       showInDefault="1"
+                       showInWebsite="1"
+                       showInStore="0">
+                    <label>ΠΕΡΙΦΕΡΕΙΑ Base Shipping Cost per order (€)</label>
+                    <validate>validate-number validate-zero-or-greater</validate>
+                </field>
+                <field id="baseWeightRegion"
+                       translate="label"
+                       type="text"
+                       sortOrder="27"
+                       showInDefault="1"
+                       showInWebsite="1"
+                       showInStore="0">
+                    <label>ΠΕΡΙΦΕΡΕΙΑ Base Shipping Cost Weight Limit (kg)</label>
+                    <validate>validate-number validate-zero-or-greater</validate>
+                </field>
+                <field id="costPerKgRegion"
+                       translate="label"
+                       type="text"
+                       sortOrder="28"
+                       showInDefault="1"
+                       showInWebsite="1"
+                       showInStore="0">
+                    <label>ΠΕΡΙΦΕΡΕΙΑ Cost per extra kg (€)</label>
+                    <validate>validate-number validate-zero-or-greater</validate>
+                </field>
+
+
+                <field id="basePrice"
+                       translate="label"
+                       type="text"
+                       sortOrder="29"
+                       showInDefault="1"
+                       showInWebsite="1"
+                       showInStore="0">
+                    <label>ΧΕΡΣΑΙΑ Base Shipping Cost per order (€)</label>
+                    <validate>validate-number validate-zero-or-greater</validate>
+                </field>
+                <field id="baseWeight"
+                       translate="label"
+                       type="text"
+                       sortOrder="30"
+                       showInDefault="1"
+                       showInWebsite="1"
+                       showInStore="0">
+                    <label>ΧΕΡΣΑΙΑ Base Shipping Cost Weight Limit (kg)</label>
+                    <validate>validate-number validate-zero-or-greater</validate>
+                </field>
+                <field id="costPerKg"
+                       translate="label"
+                       type="text"
+                       sortOrder="31"
+                       showInDefault="1"
+                       showInWebsite="1"
+                       showInStore="0">
+                    <label>ΧΕΡΣΑΙΑ Cost per extra kg (€)</label>
+                    <validate>validate-number validate-zero-or-greater</validate>
+                </field>
+
+
+                <field id="basePriceInCy"
+                       translate="label"
+                       type="text"
+                       sortOrder="32"
+                       showInDefault="1"
+                       showInWebsite="1"
+                       showInStore="0">
+                    <label>ΕΝΤΟΣ ΚΥΠΡΟΥ Base Shipping Cost per order (€)</label>
+                    <validate>validate-number validate-zero-or-greater</validate>
+                </field>
+                <field id="baseWeightInCy"
+                       translate="label"
+                       type="text"
+                       sortOrder="33"
+                       showInDefault="1"
+                       showInWebsite="1"
+                       showInStore="0">
+                    <label>ΕΝΤΟΣ ΚΥΠΡΟΥ Base Shipping Cost Weight Limit (kg)</label>
+                    <validate>validate-number validate-zero-or-greater</validate>
+                </field>
+                <field id="costPerKgInCy"
+                       translate="label"
+                       type="text"
+                       sortOrder="34"
+                       showInDefault="1"
+                       showInWebsite="1"
+                       showInStore="0">
+                    <label>ΕΝΤΟΣ ΚΥΠΡΟΥ Cost per extra kg (€)</label>
+                    <validate>validate-number validate-zero-or-greater</validate>
+                </field>
+
+
+                <field id="basePriceCy"
+                       translate="label"
+                       type="text"
+                       sortOrder="35"
+                       showInDefault="1"
+                       showInWebsite="1"
+                       showInStore="0">
+                    <label>ΚΥΠΡΟΣ Base Shipping Cost per order (€)</label>
+                    <validate>validate-number validate-zero-or-greater</validate>
+                </field>
+                <field id="baseWeightCy"
+                       translate="label"
+                       type="text"
+                       sortOrder="36"
+                       showInDefault="1"
+                       showInWebsite="1"
+                       showInStore="0">
+                    <label>ΚΥΠΡΟΣ Base Shipping Cost Weight Limit (kg)</label>
+                    <validate>validate-number validate-zero-or-greater</validate>
+                </field>
+                <field id="costPerKgCy"
+                       translate="label"
+                       type="text"
+                       sortOrder="37"
+                       showInDefault="1"
+                       showInWebsite="1"
+                       showInStore="0">
+                    <label>ΚΥΠΡΟΣ Cost per extra kg (€)</label>
+                    <validate>validate-number validate-zero-or-greater</validate>
                 </field>
                 <field id="updatePoints" translate="label" type="button" sortOrder="70" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Update Points</label>

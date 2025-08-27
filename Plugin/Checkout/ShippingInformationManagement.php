@@ -29,9 +29,9 @@ class ShippingInformationManagement
         \Magento\Checkout\Api\Data\ShippingInformationInterface $addressInformation
     ) {
         $extensionAttributes = $addressInformation->getExtensionAttributes();
-        $acs_pp_point_id = $extensionAttributes->getAcsPpPointId();
         $quote = $this->cartRepository->getActive($cartId);
-        $quote->setAcsPpPointId($acs_pp_point_id);
+        $quote->setAcsPpPointId($extensionAttributes->getAcsPpPointId());
+        $quote->setAcsPpPointSlug($extensionAttributes->getAcsPpPointSlug());
         return [$cartId, $addressInformation]; // needed?
     }
 }

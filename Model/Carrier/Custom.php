@@ -43,9 +43,18 @@ class Custom extends AbstractCarrier implements CarrierInterface
             return false;
         }
 
-        $shipment_weight = $request->getPackageWeight();
-        if ($shipment_weight > $this->getConfigData('weightUpperLimit')) {
+        $weightTotal = $request->getPackageWeight();
+        if ($weightTotal > $this->getConfigData('weightUpperLimit')) {
             return false;
+        }
+
+        $items = $request->getAllItems();
+        foreach ($items as $item) {
+            $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
+            $product = $objectManager->create('Magento\Catalog\Model\Product')->load($item->getProductId());
+            if ($product->getData('disable_locker') == 1) {
+                return false;
+            }
         }
 
         $shipment_price = $request->getPackageValue();
@@ -56,9 +65,60 @@ class Custom extends AbstractCarrier implements CarrierInterface
 
         $methodPrice = 0;
         if (!$isFreeShipping) {
-            $methodPrice = $this->getConfigData('basePrice');
-            if ($shipment_weight > $this->getConfigData('baseWeight')) {
-                $methodPrice += $this->getConfigData('costPerKg') * ($shipment_weight - $this->getConfigData('baseWeight'));
+            $settings = [
+                'dispatcherCountry' => $this->getConfigData('senderCountry') ?? 'GR',
+                'dispatcherZipcode' => $this->getConfigData('senderZipcode') ?? '',
+                'acsClientId' => $this->getConfigData('acsClientId') ?? '',
+                'pricing' => [
+                    'same_city' => [
+                        'baseCost' => $this->getConfigData('basePriceCity'),
+                        'baseCostKgLimit' => $this->getConfigData('baseWeightCity'),
+                        'costPerKg' => $this->getConfigData('costPerKgCity'),
+                    ],
+                    'island' => [
+                        'baseCost' => $this->getConfigData('basePriceIsland'),
+                        'baseCostKgLimit' => $this->getConfigData('baseWeightIsland'),
+                        'costPerKg' => $this->getConfigData('costPerKgIsland'),
+                    ],
+                    'region' => [
+                        'baseCost' => $this->getConfigData('basePriceRegion'),
+                        'baseCostKgLimit' => $this->getConfigData('baseWeightRegion'),
+                        'costPerKg' => $this->getConfigData('costPerKgRegion'),
+                    ],
+                    'overland' => [
+                        'baseCost' => $this->getConfigData('basePrice'),
+                        'baseCostKgLimit' => $this->getConfigData('baseWeight'),
+                        'costPerKg' => $this->getConfigData('costPerKg'),
+                    ],
+                    'internal_cyprus' => [
+                        'baseCost' => $this->getConfigData('basePriceInCy'),
+                        'baseCostKgLimit' => $this->getConfigData('baseWeightInCy'),
+                        'costPerKg' => $this->getConfigData('costPerKgInCy'),
+                    ],
+                    'cyprus' => [
+                        'baseCost' => $this->getConfigData('basePriceCy'),
+                        'baseCostKgLimit' => $this->getConfigData('baseWeightCy'),
+                        'costPerKg' => $this->getConfigData('costPerKgCy'),
+                    ],
+                ]
+            ];
+
+            $sender_country = $settings['dispatcherCountry'];
+            $sender_zipcode = $settings['dispatcherZipcode'];
+            $sender_billing_code = $settings['acsClientId'];
+
+            $recipient_zipcode = $request->getDestPostcode();
+            $recipient_country = $request->getDestCountryId();
+
+            $costGroup = $this->calculate_type($sender_country, $sender_zipcode, $sender_billing_code, $recipient_country, $recipient_zipcode);
+
+            $baseCost = $settings['pricing'][$costGroup]['baseCost'] ?? 0;
+            $baseCostKgLimit = $settings['pricing'][$costGroup]['baseCostKgLimit'] ?? 0;
+            $costPerKg = $settings['pricing'][$costGroup]['costPerKg'] ?? 0;
+            
+            $methodPrice = $baseCost;
+            if ($weightTotal > $baseCostKgLimit) {
+                $methodPrice += $costPerKg * ($weightTotal - $baseCostKgLimit);
             }
         }
 
@@ -101,5 +161,60 @@ class Custom extends AbstractCarrier implements CarrierInterface
     public function isStateProvinceRequired()
     {
         return true;
+    }
+    function calculate_type(
+        $sender_country,
+        $sender_zipcode,
+        $sender_billing_code,
+        $recipient_country,
+        $recipient_zipcode
+    )
+    {
+        preg_match('/\d([^\d]{2})\d+/u', $sender_billing_code, $matches);
+        $sender_store = $matches[1] ?? null;
+        $sender_zipcode_data = $this->getDataFromZipcode($sender_zipcode);
+        $recipient_zipcode_data = $this->getDataFromZipcode($recipient_zipcode);
+
+        if (!in_array($recipient_country, ['GR', 'CY']) && !in_array($sender_country, ['GR', 'CY'])) {
+            return false;
+        }
+
+        if ($sender_country === 'CY' && $recipient_country === 'CY') {
+            return 'internal_cyprus';
+        }
+
+        if ($sender_country === 'CY' || $recipient_country === 'CY') {
+            return 'cyprus';
+        }
+
+        if ($sender_store == $recipient_zipcode_data['store']) {
+            return 'same_city';
+        }
+
+        if ($recipient_zipcode_data['category'] == 'ΝΗΣΙΩΤΙΚΟΣ') {
+            return 'island';
+        }
+
+        if (
+            $recipient_zipcode_data['region'] != ''
+            && $sender_zipcode_data['region'] != ''
+            && $recipient_zipcode_data['region'] == $sender_zipcode_data['region']
+        ) {
+            return 'region';
+        }
+
+        return 'overland';
+    }
+
+    function getDataFromZipcode($recipient_zipcode)
+    {
+        $json = file_get_contents(__DIR__ . '/mapper.json');
+        $data = json_decode($json, true);
+
+        return [
+            'store' => $data[$recipient_zipcode]['store'] ?? null,
+            'category' => $data[$recipient_zipcode]['category'] ?? null,
+            'region' => $data[$recipient_zipcode]['region'] ?? null,
+        ];
     }
 }
